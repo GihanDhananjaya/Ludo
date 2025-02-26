@@ -23,7 +23,6 @@ class ShopView extends BaseView {
   final VoidCallback onTapJoinButton;
   final VoidCallback onTapBack;
 
-
   ShopView({super.key, required this.onTapJoinButton,required this.onTapBack,});
 
 

@@ -75,7 +75,7 @@ class _SplashViewState extends BaseViewState<SplashView>
                 children: [
                   Image.asset(AppImages.appSkins,height: 183.h,width: 236.w,),
                   Text(
-                    "Dice",
+                    "Dice ",
                     style: TextStyle(
                       fontSize: AppDimensions.kFontSize59,
                       fontWeight: FontWeight.w400,
