@@ -26,6 +26,7 @@ class ShopView extends BaseView {
 
   ShopView({super.key, required this.onTapJoinButton,required this.onTapBack,});
 
+
   @override
   State<ShopView> createState() => _ShopViewState();
 }
