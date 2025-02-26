@@ -64,6 +64,7 @@ class _SplashViewState extends BaseViewState<SplashView>
                 }
           },
           child: Stack(
+
             fit: StackFit.expand,
             children: [
               Image.asset(
