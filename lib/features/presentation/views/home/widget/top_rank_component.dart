@@ -101,14 +101,20 @@ class TopRanksWidget extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 3.h),
-                      Text(
-                        player.name,
-                        style: TextStyle(
-                          fontSize: 12.sp,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      Container(
+                        width:60,
+                        child: Text(
+                          textAlign: TextAlign.center,
+                          player.name,
+                          style: TextStyle(
+                            overflow: TextOverflow.ellipsis,
+                            fontSize: AppDimensions.kFontSize14,
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.initColors().white,
+                          ),
+                            overflow: TextOverflow.ellipsis,
+
                         ),
-                        overflow: TextOverflow.ellipsis,
                       ),
                     ],
                   );

@@ -83,12 +83,12 @@ class MockModels {
     },
      {
       "user_id": 2,
-      "full_name": "Nuwan",
+      "full_name": "Nuwan ",
       "rank": 2,
       "profile_image": "https://img.freepik.com/free-vector/young-prince-vector-illustration_1308-174367.jpg?ga=GA1.1.1308396569.1740521377&semt=ais_hybrid"
     }, {
       "user_id": 3,
-      "full_name": "Kasun",
+      "full_name": "Kasun ",
       "rank": 3,
       "profile_image": "https://img.freepik.com/premium-photo/memoji-happy-man-white-background-emoji_826801-6834.jpg?ga=GA1.1.1308396569.1740521377&semt=ais_hybrid"
     },
