@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -132,6 +133,10 @@ class _SignInViewState extends BaseViewState<SignInView> {
                                 fontWeight: FontWeight.w400,
                                 color: Colors.white,
                               ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () {
+                                  Navigator.pushNamed(context, Routes.kSignUpView);
+                                },
                             ),
                           ],
                         ),
