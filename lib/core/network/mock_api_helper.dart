@@ -49,6 +49,8 @@ class MockAPIHelper {
       return MockModels.authUserResponse;
     }else if (url == 'rank/top') {
       return MockModels.topRankResponse;
+    }else if (url == 'master/get') {
+      return MockModels.masterDataResponse;
     }
   }
 }

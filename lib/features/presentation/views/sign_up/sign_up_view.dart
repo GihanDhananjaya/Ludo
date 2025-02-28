@@ -9,6 +9,7 @@ import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_images.dart';
 import '../../../../utils/navigation_routes.dart';
 import '../../../data/models/request/user_register_request.dart';
+import '../../../data/models/request/user_verification_request.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_event.dart';
 import '../../bloc/auth/auth_state.dart';
@@ -47,8 +48,14 @@ class _SignUpViewState extends BaseViewState<SignUpView> {
         child: BlocListener<AuthBloc, BaseState<AuthState>>(
           listener: (_, state) {
             if(state is UserRegisterSuccessState){
+              bloc.add(UserVerificationDataEvent(userVerificationRequest:
+              UserVerificationRequest(mobileNumber: phoneNumberController.text)));
+            }else if(state is UserVerificationDataSuccessState){
               Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.kOtpVerifyView, (route) => false);
+                  context, Routes.kSignInView, (route) => false);
+            }else{
+              Navigator.pushNamedAndRemoveUntil(
+                  context, Routes.kOtpVerifyView, (route) => false,arguments: phoneNumberController.text);
             }
           },
           child: Stack(

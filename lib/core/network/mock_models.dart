@@ -29,6 +29,9 @@ class MockModels {
   }
  }''';
 
+
+
+
   ///Endpoint : otp/generate
   static const String otpGenerateRequest = '''{
   "mobile_number": "+94716362938",
@@ -79,7 +82,7 @@ class MockModels {
       "user_id": 1,
       "full_name": "Name",
       "rank": 1,
-      "profile_image": "https://img.freepik.com/free-vector/smiling-young-man-illustration_1308-173524.jpg?t=st=1740564635~exp=1740568235~hmac=d554e1f133494d2125e5ecde4ff62a29a87a9f28b3e8d1014f118bcb16af670b&w=740"
+      "profile_image": "https://img.freepik.com/free-vector/young-prince-vector-illustration_1308-174367.jpg?ga=GA1.1.1308396569.1740521377&semt=ais_hybrid"
     },
      {
       "user_id": 2,
@@ -105,6 +108,15 @@ class MockModels {
       "profile_image": "https://img.freepik.com/free-vector/smiling-boy-hoodie_1308-178004.jpg?ga=GA1.1.1308396569.1740521377&semt=ais_hybrid"
     }
   ]
+ }''';
+
+  ///Endpoint : master/get
+  static const String masterDataResponse = '''{
+  "success": true,
+  "message": "Master Data Success",
+  "output": {
+    "free_coins": 500
+  }
  }''';
 
 }

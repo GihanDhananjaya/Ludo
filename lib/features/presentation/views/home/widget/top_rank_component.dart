@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ludoapp/utils/app_dimensions.dart';
 import '../../../../../utils/app_colors.dart';
+import '../../../../../utils/app_images.dart';
 
 class TopRanksWidget extends StatelessWidget {
   final List<RankPlayer> players;
@@ -96,6 +97,7 @@ class TopRanksWidget extends StatelessWidget {
                         child: ClipOval(
                           child: Image.network(
                             player.imagePath,
+                            //AppImages.appMan,
                             fit: BoxFit.cover,
                           ),
                         ),

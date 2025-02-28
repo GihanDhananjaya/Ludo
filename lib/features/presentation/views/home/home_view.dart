@@ -24,9 +24,10 @@ import '../base_view.dart';
 class HomeView extends BaseView {
   final VoidCallback onTapJoinButton;
   final VoidCallback onTapBack;
+  final int? freeCoins;
 
 
-  HomeView({super.key, required this.onTapJoinButton,required this.onTapBack,});
+  HomeView({super.key, required this.onTapJoinButton,required this.onTapBack,this.freeCoins});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -34,7 +35,6 @@ class HomeView extends BaseView {
 
 class _HomeViewState extends BaseViewState<HomeView> {
   var bloc = injection<AuthBloc>();
-  late StreamSubscription<double> _subscription;
   double  _value = 2.0;
   int coins = 0;
   int gems = 0;
@@ -46,16 +46,17 @@ class _HomeViewState extends BaseViewState<HomeView> {
   @override
   void initState() {
     super.initState();
-    bloc.add(AuthUserGetEvent(token: appSharedData.getAppToken()!, shouldShowProgress: true));
+    if(appSharedData.hasAppUser()){
+      bloc.add(AuthUserGetEvent(token: appSharedData.getAppToken()!, shouldShowProgress: true));
+    }else{
+      setState(() {
+        coins = 0;
+        gems = 0;
+      });
+    }
+
     bloc.add(TopRankGetEvent(shouldShowProgress: true));
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _subscription.cancel();
-  }
-
 
   @override
   Widget buildView(BuildContext context) {
@@ -71,6 +72,10 @@ class _HomeViewState extends BaseViewState<HomeView> {
                   rank = state.output.rank!;
                   fullName = state.output.fullName!;
                 });
+              }else if(state is AuthUserGetFailedState){
+                coins = 0;
+                gems = 0;
+
               }else if(state is TopRankGetSuccessState){
                 setState(() {
                   topRankDataList = state.rankData;
@@ -93,96 +98,108 @@ class _HomeViewState extends BaseViewState<HomeView> {
                         TopComponent(
                           coins: coins,
                           gems: gems,
-                          onCoinsTap: () {},
-                          onGemsTap: () {},
+                          onCoinsTap: () {
+                            loginCustomDialog(context,widget.freeCoins!);
+                          },
+                          onGemsTap: () {
+                            loginCustomDialog(context,widget.freeCoins!);
+                          },
                           setting: () {
-                            showCustomDialog(
-                              context,
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text("Game sound",style: TextStyle(
-                                          color: AppColors.initColors().white,fontWeight: FontWeight.w600,
-                                          fontSize: AppDimensions.kFontSize14),),
-                                      SizedBox(width: 50,),
-                                      Text( _value.toInt().toString(),style: TextStyle(color: AppColors.initColors().white,fontWeight: FontWeight.w400,
-                                          fontSize: AppDimensions.kFontSize18)),
-                                    ],
-                                  ),
-                                  Container(
-                                    width: 230,
-                                    child: InteractiveSlider(
-                                      foregroundColor: AppColors.initColors().disableButtonColor,
-                                      min: 1.0,
-                                      max: 15.0,
-                                      onChanged: (value) => setState(() => _value = value),
-                                    ),
-                                  ),
-                                  SizedBox(height: 10.h),
-                                  Text("Mic",style: TextStyle(color: AppColors.initColors().white,fontWeight: FontWeight.w600,
-                                      fontSize: AppDimensions.kFontSize15)),
-                                  SizedBox(height: 10.h,),
-                                  MicToggle(title1: 'Open mic', title2: 'Close mic',),
-                                  SizedBox(height: 20.h),
-                                  Text("Opponent sound",style: TextStyle(color: AppColors.initColors().white,fontWeight: FontWeight.w600,
-                                  fontSize: AppDimensions.kFontSize15)),
-                                  SizedBox(height: 10,),
-                                  MicToggle(title1: 'on', title2: 'off',),
-                                  SizedBox(height: 50,),
-                                  InkResponse(
-                                    onTap: (){},
-                                    child: Row(
+                            if(appSharedData.hasAppUser()){
+                              showCustomDialog(
+                                context,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Icon(Icons.logout,color: AppColors.initColors().errorRed,size: 16,),
-                                        SizedBox(width: 6.w,),
-                                        Text('Leave game',style: TextStyle(
-                                            fontSize: AppDimensions.kFontSize14,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.initColors().errorRed),)
+                                        Text("Game sound",style: TextStyle(
+                                            color: AppColors.initColors().white,fontWeight: FontWeight.w600,
+                                            fontSize: AppDimensions.kFontSize14),),
+                                        SizedBox(width: 50,),
+                                        Text( _value.toInt().toString(),style: TextStyle(color: AppColors.initColors().white,fontWeight: FontWeight.w400,
+                                            fontSize: AppDimensions.kFontSize18)),
                                       ],
                                     ),
-                                  )
-                                ],
-                                ),
-                              );
-                            },
-                          notification: () {
-                            exitCustomDialog(
-                                context,AppImages.appExit,
-                                Column(
-                                  children: [
-                                    SizedBox(
-                                      width: 180,
-                                        child: Text('If you exit now, you will lose the coins you’ve bet. '
-                                            'Think carefully before leaving.',style: TextStyle(
-                                            fontSize: AppDimensions.kFontSize12,
-                                            fontWeight: FontWeight.w600,
-                                            color: AppColors.initColors().white),)),
-                                    SizedBox(height: 20.h,),
-                                    Row(children: [
-                                      Image.asset(AppImages.appCrown,height: 17,width: 17,),
-                                      SizedBox(width: 10.w,),
-                                      Text('+50',style: TextStyle(
-                                          fontSize: AppDimensions.kFontSize12,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.initColors().white),)
-                                    ],),
-                                    SizedBox(height: 5.h,),
-                                    Row(children: [
-                                      Image.asset(AppImages.appCrown,height: 17,width: 17,),
-                                      SizedBox(width: 10.w,),
-                                      Text('+50',style: TextStyle(
-                                          fontSize: AppDimensions.kFontSize12,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.initColors().white),)
-                                    ],)
+                                    Container(
+                                      width: 230,
+                                      child: InteractiveSlider(
+                                        foregroundColor: AppColors.initColors().disableButtonColor,
+                                        min: 1.0,
+                                        max: 15.0,
+                                        onChanged: (value) => setState(() => _value = value),
+                                      ),
+                                    ),
+                                    SizedBox(height: 10.h),
+                                    Text("Mic",style: TextStyle(color: AppColors.initColors().white,fontWeight: FontWeight.w600,
+                                        fontSize: AppDimensions.kFontSize15)),
+                                    SizedBox(height: 10.h,),
+                                    MicToggle(title1: 'Open mic', title2: 'Close mic',),
+                                    SizedBox(height: 20.h),
+                                    Text("Opponent sound",style: TextStyle(color: AppColors.initColors().white,fontWeight: FontWeight.w600,
+                                        fontSize: AppDimensions.kFontSize15)),
+                                    SizedBox(height: 10,),
+                                    MicToggle(title1: 'on', title2: 'off',),
+                                    SizedBox(height: 50,),
+                                    InkResponse(
+                                      onTap: (){},
+                                      child: Row(
+                                        children: [
+                                          Icon(Icons.logout,color: AppColors.initColors().errorRed,size: 16,),
+                                          SizedBox(width: 6.w,),
+                                          Text('Leave game',style: TextStyle(
+                                              fontSize: AppDimensions.kFontSize14,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.initColors().errorRed),)
+                                        ],
+                                      ),
+                                    )
                                   ],
                                 ),
-                                'Exit Game?','Back to game'
-                            );
+                              );
+                            }else{
+                              loginCustomDialog(context,widget.freeCoins!);
+                              }
+                            },
+                          notification: () {
+                            if(appSharedData.hasAppUser()){
+                              exitCustomDialog(
+                                  context,AppImages.appExit,
+                                  Column(
+                                    children: [
+                                      SizedBox(
+                                          width: 180,
+                                          child: Text('If you exit now, you will lose the coins you’ve bet. '
+                                              'Think carefully before leaving.',style: TextStyle(
+                                              fontSize: AppDimensions.kFontSize12,
+                                              fontWeight: FontWeight.w600,
+                                              color: AppColors.initColors().white),)),
+                                      SizedBox(height: 20.h,),
+                                      Row(children: [
+                                        Image.asset(AppImages.appCrown,height: 17,width: 17,),
+                                        SizedBox(width: 10.w,),
+                                        Text('+50',style: TextStyle(
+                                            fontSize: AppDimensions.kFontSize12,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.initColors().white),)
+                                      ],),
+                                      SizedBox(height: 5.h,),
+                                      Row(children: [
+                                        Image.asset(AppImages.appCrown,height: 17,width: 17,),
+                                        SizedBox(width: 10.w,),
+                                        Text('+50',style: TextStyle(
+                                            fontSize: AppDimensions.kFontSize12,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.initColors().white),)
+                                      ],)
+                                    ],
+                                  ),
+                                  'Exit Game?','Back to game'
+                              );
+                            } else{
+                              loginCustomDialog(context,widget.freeCoins!);
+                            }
                           },
                         ),
                          SizedBox(height: 10.h,),
@@ -192,39 +209,50 @@ class _HomeViewState extends BaseViewState<HomeView> {
                             Column(
                               children: [
                                 TaskGiftCompo(imagePath: AppImages.appTask, label: 'Task', onTap: () {
-                                  crownCustomDialog(context,AppImages.appCrownPopup,
-                                      Column(
-                                        children: [
-                                          SizedBox(
-                                              width: 180,
-                                              child: Text('Your opponent has exited the match. You win by default',style: TextStyle(
+                                  if(appSharedData.hasAppUser()){
+                                    crownCustomDialog(context,AppImages.appCrownPopup,
+                                        Column(
+                                          children: [
+                                            SizedBox(
+                                                width: 180,
+                                                child: Text('Your opponent has exited the match. You win by default',style: TextStyle(
+                                                    fontSize: AppDimensions.kFontSize12,
+                                                    fontWeight: FontWeight.w600,
+                                                    color: AppColors.initColors().white),)),
+                                            SizedBox(height: 20.h,),
+                                            Row(children: [
+                                              Image.asset(AppImages.appCrown,height: 17,width: 17,),
+                                              SizedBox(width: 10.w,),
+                                              Text('+50',style: TextStyle(
                                                   fontSize: AppDimensions.kFontSize12,
                                                   fontWeight: FontWeight.w600,
-                                                  color: AppColors.initColors().white),)),
-                                          SizedBox(height: 20.h,),
-                                          Row(children: [
-                                            Image.asset(AppImages.appCrown,height: 17,width: 17,),
-                                            SizedBox(width: 10.w,),
-                                            Text('+50',style: TextStyle(
-                                                fontSize: AppDimensions.kFontSize12,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.initColors().white),)
-                                          ],),
-                                          SizedBox(height: 5.h,),
-                                          Row(children: [
-                                            Image.asset(AppImages.appCrown,height: 17,width: 17,),
-                                            SizedBox(width: 10.w,),
-                                            Text('+50',style: TextStyle(
-                                                fontSize: AppDimensions.kFontSize12,
-                                                fontWeight: FontWeight.w600,
-                                                color: AppColors.initColors().white),)
-                                          ],)
-                                        ],
-                                      ),
-                                      'Opponent Left the Game','Go to Home');
+                                                  color: AppColors.initColors().white),)
+                                            ],),
+                                            SizedBox(height: 5.h,),
+                                            Row(children: [
+                                              Image.asset(AppImages.appCrown,height: 17,width: 17,),
+                                              SizedBox(width: 10.w,),
+                                              Text('+50',style: TextStyle(
+                                                  fontSize: AppDimensions.kFontSize12,
+                                                  fontWeight: FontWeight.w600,
+                                                  color: AppColors.initColors().white),)
+                                            ],)
+                                          ],
+                                        ),
+                                        'Opponent Left the Game','Go to Home');
+                                  }else{
+                                    loginCustomDialog(context,widget.freeCoins!);
+                                  }
+
                                 },),
                                 SizedBox(height:12.h,),
-                                TaskGiftCompo(imagePath: AppImages.appGift, label: 'Gift', onTap: () {},),
+                                TaskGiftCompo(imagePath: AppImages.appGift, label: 'Gift', onTap: () {
+                                  if(appSharedData.hasAppUser()){
+
+                                  }else{
+                                    loginCustomDialog(context,widget.freeCoins!);
+                                  }
+                                },),
                               ],
                             ),
                             Image.asset(AppImages.appPirate,height: 266,width: 195,),
@@ -242,13 +270,21 @@ class _HomeViewState extends BaseViewState<HomeView> {
                           children: [
                             InkResponse(
                                 onTap: (){
-                                  Navigator.pushNamed(context, Routes.kDiceView);
+                                  if(appSharedData.hasAppUser()){
+                                    Navigator.pushNamed(context, Routes.kDiceView);
+                                  }else{
+                                    loginCustomDialog(context,widget.freeCoins!);
+                                  }
                                 },
                                 child: Image.asset(AppImages.appGame1,width: 179,height: 179,)),
                             InkResponse(
                                 onTap: (){
-                                  Navigator.pushNamed(context, Routes.kSelectRoomView);
-                                },
+                                  if(appSharedData.hasAppUser()){
+                                    Navigator.pushNamed(context, Routes.kSelectRoomView);
+                                  }else{
+                                    loginCustomDialog(context,widget.freeCoins!);
+                                  }
+                                  },
                                 child: Image.asset(AppImages.appGame2,width: 159,height: 179,)),
                           ],
                         ),

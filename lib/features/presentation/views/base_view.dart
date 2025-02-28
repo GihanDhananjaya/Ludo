@@ -412,6 +412,116 @@ abstract class BaseViewState<Page extends BaseView> extends State<Page> {
     );
   }
 
+  void loginCustomDialog(BuildContext context,int freeCoins) {
+    showDialog(
+      context: context,
+      barrierDismissible: true,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8.0),
+          ),
+          backgroundColor: Colors.transparent,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Stack(
+              alignment: Alignment.center, // Center content on the image
+              children: [
+                Image.asset(
+                  AppImages.appCrownPopup,height: 400,
+                  fit: BoxFit.cover,
+                ),
+                Positioned(
+                  top: 100,
+                  child: CurvedText(
+                    curvature: 0.003,
+                    text: "Login In to Start Playing",
+                    textStyle: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: AppDimensions.kFontSize20,
+                        color: AppColors.initColors().white),
+                  ),
+                ),
+                Positioned(
+                  bottom: 4,
+                  left: 135,
+                  child: InkResponse(
+                    onTap: (){
+                      Navigator.pushNamed(context, Routes.kSignInView);
+                    },
+                    child: SizedBox(
+                      width: 100,
+                      height: 40,
+                      child: Text('Log In',style: TextStyle(
+                          color: AppColors.initColors().white,
+                          fontWeight: FontWeight.w600,fontSize: AppDimensions.kFontSize20),),
+                    ),
+                  ), // Custom text or buttons on image
+                ),
+                Positioned(
+                  top: 150, // Adjust as needed
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width:190,
+                        child: Text("You need to log in to access this game mode. Sign in now and start rolling Enjoy exclusive benefits",
+                        style: TextStyle(color: AppColors.initColors().white,fontSize: AppDimensions.kFontSize12,
+                            fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      SizedBox(height: 18.h,),
+                      Row(
+                        children: [
+                          CircleAvatar(backgroundColor: AppColors.initColors().disableButtonColor,radius: 5,),
+                          SizedBox(width: 5.w,),
+                          Text("${freeCoins} Free Coins",style:
+                          TextStyle(color: AppColors.initColors().white,fontSize: AppDimensions.kFontSize12,
+                              fontWeight: FontWeight.w600),)
+                        ],
+                      ),
+                      SizedBox(height: 5.h,),
+                      Row(
+                        children: [
+                          CircleAvatar(backgroundColor: AppColors.initColors().disableButtonColor,radius: 5,),
+                          SizedBox(width: 5.w,),
+                          Text("Play with Friends",style:
+                          TextStyle(color: AppColors.initColors().white,fontSize: AppDimensions.kFontSize12,
+                              fontWeight: FontWeight.w600),)
+                        ],
+                      ),
+                      SizedBox(height: 5.h,),
+                      Row(
+                        children: [
+                          CircleAvatar(backgroundColor: AppColors.initColors().disableButtonColor,radius: 5,),
+                          SizedBox(width: 5.w,),
+                          Text("Compete Online",style:
+                          TextStyle(color: AppColors.initColors().white,fontSize: AppDimensions.kFontSize12,
+                              fontWeight: FontWeight.w600),)
+                        ],
+                      ),
+                      SizedBox(height: 5.h,),
+                      Row(
+                        children: [
+                          CircleAvatar(backgroundColor: AppColors.initColors().disableButtonColor,radius: 5,),
+                          SizedBox(width: 5.w,),
+                          Text("Earn Reward",style:
+                          TextStyle(color: AppColors.initColors().white,fontSize: AppDimensions.kFontSize12,
+                              fontWeight: FontWeight.w600),)
+                        ],
+                      )
+                    ],
+                  ), // Custom text or buttons on image
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
 
   showProgressBar() {
     if (!_isProgressShow) {

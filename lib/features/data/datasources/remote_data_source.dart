@@ -8,10 +8,12 @@ import '../models/request/otp_submit_request.dart';
 import '../models/request/user_register_request.dart';
 import '../models/request/user_verification_request.dart';
 import '../models/responses/auth_user_response.dart';
+import '../models/responses/master_data_response.dart';
 import '../models/responses/otp_generate_response.dart';
 import '../models/responses/otp_submit_response.dart';
 import '../models/responses/top_rank_response.dart';
 import '../models/responses/user_register_response.dart';
+import '../models/responses/user_verification_fail_response.dart';
 import '../models/responses/user_verification_response.dart';
 
 
@@ -26,6 +28,7 @@ abstract class RemoteDataSource {
   Future<OtpSubmitResponse> otpSubmitDataAPI(
       OtpSubmitRequest otpSubmitRequest);
   Future<TopRankResponse> topRankGetAPI();
+  Future<MasterDataResponse> masterDataGetAPI();
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -70,6 +73,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     }
   }
 
+
+
   @override
   Future<OtpGenerateResponse> otpGenerateDataAPI(OtpGenerateRequest otpGenerateRequest) async {
     try {
@@ -101,6 +106,16 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     try {
       final response = await mockAPIHelper.post("rank/top", body: null);
       return TopRankResponse.fromJson(response.data);
+    } on Exception {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<MasterDataResponse> masterDataGetAPI() async {
+    try {
+      final response = await mockAPIHelper.post("master/get", body: null);
+      return MasterDataResponse.fromJson(response.data);
     } on Exception {
       rethrow;
     }

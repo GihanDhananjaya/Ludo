@@ -5,13 +5,11 @@ import 'package:ludoapp/utils/app_dimensions.dart';
 class CoinsGemCounterComponent extends StatelessWidget {
   final String imagePath;
   final int count;
-  final VoidCallback onTap;
 
   const CoinsGemCounterComponent({
     Key? key,
     required this.imagePath,
     required this.count,
-    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -38,18 +36,6 @@ class CoinsGemCounterComponent extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          //SizedBox(width: 8.w),
-          // GestureDetector(
-          //   onTap: onTap,
-          //   child: Container(
-          //     padding: EdgeInsets.all(5.w),
-          //     decoration: BoxDecoration(
-          //       color: Colors.orangeAccent,
-          //       borderRadius: BorderRadius.circular(5.r),
-          //     ),
-          //     child: Icon(Icons.add, size: 20.sp, color: Colors.white),
-          //   ),
-          // ),
         ],
       ),
     );

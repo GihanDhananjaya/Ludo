@@ -1,4 +1,5 @@
 import '../../../data/models/responses/auth_user_response.dart';
+import '../../../data/models/responses/master_data_response.dart';
 import '../../../data/models/responses/otp_generate_response.dart';
 import '../../../data/models/responses/top_rank_response.dart';
 import '../../../data/models/responses/user_register_response.dart';
@@ -25,6 +26,14 @@ class AuthUserGetSuccessState extends AuthState {
   AuthUserGetSuccessState({
     required this.message,
     required this.output,
+  });
+}
+
+class AuthUserGetFailedState extends AuthState {
+  final String message;
+
+  AuthUserGetFailedState({
+    required this.message,
   });
 }
 
@@ -64,5 +73,14 @@ class TopRankGetSuccessState extends AuthState {
   final List<TopRankData>rankData;
   TopRankGetSuccessState({
     required this.rankData,
+  });
+}
+
+class MasterDataGetSuccessState extends AuthState {
+  final String message;
+  final MasterData output;
+  MasterDataGetSuccessState({
+    required this.message,
+    required this.output,
   });
 }

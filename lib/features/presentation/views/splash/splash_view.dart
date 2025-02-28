@@ -29,19 +29,14 @@ class _SplashViewState extends BaseViewState<SplashView>
 
   String version = '';
   bool isRegister = false;
+  int freeCoins = 0;
 
   @override
   void initState() {
-    if(appSharedData.hasAppUser() && appSharedData.hasAppToken()){
-      final number = appSharedData.getPhoneNumber();
-      bloc.add(UserVerificationDataEvent(userVerificationRequest: UserVerificationRequest(
-          mobileNumber: number)));
-    }else {
-      Future.delayed(Duration(seconds: 3)).then((value) {
-        Navigator.pushReplacementNamed(
-            context, Routes.kSignInView);
-      });
-    }
+    //appSharedData.removeAppUser();
+    //appSharedData.removePhoneNumber();
+    //appSharedData.clearAppToken();
+    bloc.add(MasterDataGetEvent(shouldShowProgress: false));
     super.initState();
   }
 
@@ -53,15 +48,17 @@ class _SplashViewState extends BaseViewState<SplashView>
         create: (_) => bloc,
         child: BlocListener<AuthBloc, BaseState<AuthState>>(
           listener: (_, state) {
-            if (state is UserVerificationDataSuccessState) {
-              bloc.add(AuthUserGetEvent(shouldShowProgress: true, token: state.output.token! ));
-            }else if(state is UserVerificationDataFailState){
-              Navigator.pushNamedAndRemoveUntil(
-                  context, Routes.kSignInView, (route) => false);
-            }else if (state is AuthUserGetSuccessState) {
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, Routes.kDashboardView, (route) => false);
-                }
+            if(state is MasterDataGetSuccessState){
+              freeCoins = state.output.freeCoins!;
+              if(appSharedData.hasAppUser()){
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.kDashboardView, (route) => false);
+              }else{
+                Navigator.pushNamedAndRemoveUntil(
+                    context, Routes.kHomeView, (route) => false,arguments: freeCoins);
+              }
+            }
+
           },
           child: Stack(
             fit: StackFit.expand,

@@ -16,6 +16,7 @@ import '../../../error/messages.dart';
 import '../../domain/repositories/repository.dart';
 import '../datasources/remote_data_source.dart';
 import '../models/common/common_error_response.dart';
+import '../models/responses/master_data_response.dart';
 import '../models/responses/top_rank_response.dart';
 
 class RepositoryImpl implements Repository {
@@ -158,6 +159,28 @@ class RepositoryImpl implements Repository {
   Future<Either<Failure, TopRankResponse>> topRankGetAPI() async {
     try {
       final response = await remoteDataSource.topRankGetAPI();
+      return Right(response);
+    } on ServerException catch (ex) {
+      return Left(ServerFailure(ex.errorResponseModel));
+    } on UnAuthorizedException catch (ex) {
+      return Left(AuthorizedFailure(ex.errorResponseModel));
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.errorResponseModel));
+    } on Exception {
+      return Left(
+        ServerFailure(
+          ErrorResponseModel(
+              responseError: ErrorMessages.ERROR_SOMETHING_WENT_WRONG,
+              responseCode: ''),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, MasterDataResponse>> masterDataGetAPI() async {
+    try {
+      final response = await remoteDataSource.masterDataGetAPI();
       return Right(response);
     } on ServerException catch (ex) {
       return Left(ServerFailure(ex.errorResponseModel));

@@ -48,9 +48,9 @@ class _SignInViewState extends BaseViewState<SignInView> {
         child: BlocListener<AuthBloc, BaseState<AuthState>>(
           listener: (_, state) {
              if(state is UserVerificationDataSuccessState){
-               bloc.add(AuthUserGetEvent(shouldShowProgress: true, token: appSharedData.getAppToken()!));
-            }else if(state is AuthUserGetSuccessState){
                Navigator.pushNamed(context, Routes.kOtpVerifyView,arguments: phoneNumberController.text);
+             } else if(state is UserVerificationDataFailState){
+               Navigator.pushNamed(context, Routes.kSignUpView);
              }
           },
           child: Stack(

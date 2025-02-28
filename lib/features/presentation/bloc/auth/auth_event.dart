@@ -53,3 +53,10 @@ class TopRankGetEvent extends AuthEvent {
     required this.shouldShowProgress,
   });
 }
+
+class MasterDataGetEvent extends AuthEvent {
+  final bool shouldShowProgress;
+  MasterDataGetEvent({
+    required this.shouldShowProgress,
+  });
+}

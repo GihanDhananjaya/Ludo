@@ -27,6 +27,7 @@ class AuthBloc extends Base<AuthEvent, BaseState<AuthState>> {
     on<OtpGenerateDataEvent>(_otpGenerateAPI);
     on<OtpSubmitDataEvent>(_otpSubmitAPI);
     on<TopRankGetEvent>(_topRankGetAPI);
+    on<MasterDataGetEvent>(_masterDataGetAPI);
     }
 
   _userRegisterAPI(
@@ -78,9 +79,7 @@ class AuthBloc extends Base<AuthEvent, BaseState<AuthState>> {
             output: r.output,
           );
         } else {
-          return APIFailureState(
-              errorResponseModel: ErrorResponseModel(
-                  responseError: r.message, responseCode: ''));
+          return AuthUserGetFailedState(message: r.message);
         }
       }),
     );
@@ -99,8 +98,8 @@ class AuthBloc extends Base<AuthEvent, BaseState<AuthState>> {
                   responseCode: ''));
         },
             (r) {
-          if (r.success) {
-            appSharedData.setAppToken(r.output!.token!);
+          if (r.success && r.output.token != null && r.output != null) {
+            appSharedData.setAppToken(r.output.token!);
             appSharedData.setAppCredential(event.userVerificationRequest);
             return UserVerificationDataSuccessState(message: r.message, output: r.output);
           } else {
@@ -191,5 +190,30 @@ class AuthBloc extends Base<AuthEvent, BaseState<AuthState>> {
     );
   }
 
+  _masterDataGetAPI(
+      MasterDataGetEvent event, Emitter<BaseState<AuthState>> emit) async {
+    if (event.shouldShowProgress) {
+      emit(APILoadingState());
+    }
+    final result = await repository.masterDataGetAPI();
+    emit(
+      result.fold((l) {
+        return APIFailureState(
+            errorResponseModel: ErrorResponseModel(
+                responseError: ErrorMessages().mapFailureToMessage(l),
+                responseCode: ''));
+      }, (r) {
+        if (r.success) {
+          return MasterDataGetSuccessState(
+            message: '', output: r.output,
+          );
+        } else {
+          return APIFailureState(
+              errorResponseModel: ErrorResponseModel(
+                  responseError: r.message, responseCode: ''));
+        }
+      }),
+    );
+  }
 
 }

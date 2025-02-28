@@ -24,6 +24,7 @@ class Routes {
    static const String kPaymentMethodView = "kPaymentMethodView";
    static const String kDiceView = "kDiceView";
    static const String kSelectRoomView = "kSelectRoomView";
+   static const String kHomeView = "kHomeView";
 
 
 
@@ -57,6 +58,9 @@ class Routes {
       case Routes.kSelectRoomView:
         return PageTransition(
             child: SelectRoomView(), type: PageTransitionType.fade);
+      case Routes.kHomeView:
+        return PageTransition(
+            child: HomeView(onTapJoinButton: () {  }, onTapBack: () {  },freeCoins:settings.arguments as int,), type: PageTransitionType.fade);
 
 
       default:

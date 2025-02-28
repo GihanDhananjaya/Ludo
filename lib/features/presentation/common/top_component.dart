@@ -44,9 +44,13 @@ class TopComponent extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            CoinsGemCounterComponent(imagePath: AppImages.appCoins, count: coins, onTap: onCoinsTap),
+            InkResponse(
+                onTap: onCoinsTap,
+                child: CoinsGemCounterComponent(imagePath: AppImages.appCoins, count: coins,)),
             SizedBox(height: 15.h),
-            CoinsGemCounterComponent(imagePath: AppImages.appGems, count: gems, onTap: onGemsTap),
+            InkResponse(
+                onTap: onGemsTap,
+                child: CoinsGemCounterComponent(imagePath: AppImages.appGems, count: gems, )),
           ],
         ),
       ],

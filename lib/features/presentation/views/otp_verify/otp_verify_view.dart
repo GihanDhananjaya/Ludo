@@ -49,7 +49,6 @@ class _OtpVerifyViewState extends BaseViewState<OtpVerifyView> {
     bloc.add(
         OtpGenerateDataEvent(otpGenerateRequest: OtpGenerateRequest(
             mobileNumber: widget.mobileNumber, shouldGenerate: 1)));
-
   }
 
   void _startCountDown(int remainingTime) {
@@ -71,7 +70,6 @@ class _OtpVerifyViewState extends BaseViewState<OtpVerifyView> {
     );
   }
 
-
   @override
   Widget buildView(BuildContext context) {
     return Scaffold(
@@ -84,10 +82,9 @@ class _OtpVerifyViewState extends BaseViewState<OtpVerifyView> {
                    otpReference = state.output.referenceCode;
                  });
             }else if(state is OtpSubmitDataSuccessState){
-               setState(() {
-                 Navigator.pushNamedAndRemoveUntil(context, Routes.kDashboardView, (route) => false);
-               });
-              //Navigator.pop(context, true);
+              bloc.add(AuthUserGetEvent(token: appSharedData.getAppToken()!, shouldShowProgress: true));
+            }else if(state is AuthUserGetSuccessState){
+              Navigator.pushNamedAndRemoveUntil(context, Routes.kDashboardView, (route) => false);
             }
           },
           child: Stack(
@@ -171,12 +168,10 @@ class _OtpVerifyViewState extends BaseViewState<OtpVerifyView> {
                       ),
                       SizedBox(height: 100.h),
                       AppButton(buttonText: 'Verify', onTapButton: (){
-
-                        // if(otpKey.currentState!.validate() ){
-                        // }
-
-                        bloc.add(OtpSubmitDataEvent(otpSubmitRequest: OtpSubmitRequest(
-                            mobileNumber: '0757045676', referenceCode: otpReference!, otp: _otpController.text)));
+                        if(otpKey.currentState!.validate() ){
+                          bloc.add(OtpSubmitDataEvent(otpSubmitRequest: OtpSubmitRequest(
+                              mobileNumber: '0757045676', referenceCode: otpReference!, otp: _otpController.text)));
+                        }
                       }),
                       SizedBox(height: 37.h),
                       _isCountDownFinished?
