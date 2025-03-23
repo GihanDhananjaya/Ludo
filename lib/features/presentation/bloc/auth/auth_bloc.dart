@@ -28,6 +28,10 @@ class AuthBloc extends Base<AuthEvent, BaseState<AuthState>> {
     on<OtpSubmitDataEvent>(_otpSubmitAPI);
     on<TopRankGetEvent>(_topRankGetAPI);
     on<MasterDataGetEvent>(_masterDataGetAPI);
+    on<FriendsAllDataEvent>(_friendsAllAPI);
+    on<UserAllDataEvent>(_userAllAPI);
+    on<TraderAllEvent>(_traderAllAPI);
+    on<CoinBuyEvent>(_coinBuyAPI);
     }
 
   _userRegisterAPI(
@@ -215,5 +219,105 @@ class AuthBloc extends Base<AuthEvent, BaseState<AuthState>> {
       }),
     );
   }
+
+  _friendsAllAPI(
+      FriendsAllDataEvent event, Emitter<BaseState<AuthState>> emit) async {
+    emit(APILoadingState());
+    final result = await repository.friendsAllDataAPI(event.friendsAllRequest);
+    emit(
+      result.fold((l) {
+        return APIFailureState(
+            errorResponseModel: ErrorResponseModel(
+                responseError: ErrorMessages().mapFailureToMessage(l),
+                responseCode: ''));
+      }, (r) {
+        if (r.success) {
+          return FriendsAllSuccessState(
+            message: r.message,
+            friendsAllData: r.output
+
+
+            ,
+          );
+        } else {
+          return AuthUserGetFailedState(message: r.message);
+        }
+      }),
+    );
+  }
+
+  _userAllAPI(
+      UserAllDataEvent event, Emitter<BaseState<AuthState>> emit) async {
+    emit(APILoadingState());
+    final result = await repository.userAllDataAPI(event.userAllRequest);
+    emit(
+      result.fold((l) {
+        return APIFailureState(
+            errorResponseModel: ErrorResponseModel(
+                responseError: ErrorMessages().mapFailureToMessage(l),
+                responseCode: ''));
+      }, (r) {
+        if (r.success) {
+          return UserAllSuccessState(
+            message: r.message,
+            userAllDataList: r.output,
+          );
+        } else {
+          return AuthUserGetFailedState(message: r.message);
+        }
+      }),
+    );
+  }
+
+
+  _traderAllAPI(
+      TraderAllEvent event, Emitter<BaseState<AuthState>> emit) async {
+    emit(APILoadingState());
+    final result = await repository.traderAllGetAPI();
+    emit(
+      result.fold((l) {
+        return APIFailureState(
+            errorResponseModel: ErrorResponseModel(
+                responseError: ErrorMessages().mapFailureToMessage(l),
+                responseCode: ''));
+      }, (r) {
+        if (r.success) {
+          return TraderAllSuccessState(
+            message: r.message,
+            traderAllData: r.output,
+          );
+        } else {
+          return AuthUserGetFailedState(message: r.message);
+        }
+      }),
+    );
+  }
+
+
+  _coinBuyAPI(
+      CoinBuyEvent event, Emitter<BaseState<AuthState>> emit) async {
+    emit(APILoadingState());
+    final result = await repository.coinBuyDataAPI(event.coinBuyRequest);
+    emit(
+      result.fold((l) {
+        return APIFailureState(
+            errorResponseModel: ErrorResponseModel(
+                responseError: ErrorMessages().mapFailureToMessage(l),
+                responseCode: ''));
+      }, (r) {
+        if (r.success) {
+          return CoinBuySuccessState(
+            message: r.message,
+          );
+        } else {
+          return APIFailureState(
+              errorResponseModel: ErrorResponseModel(
+                  responseError: r.message, responseCode: ''));
+        }
+      }),
+    );
+  }
+
+
 
 }

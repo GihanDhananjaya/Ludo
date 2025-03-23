@@ -2,19 +2,30 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ludoapp/utils/app_colors.dart';
 import 'package:ludoapp/utils/app_images.dart';
-
 import '../../../../../utils/app_dimensions.dart';
 
 class CustomChipList extends StatefulWidget {
+  final Function(int) onChipSelected;
+
+  CustomChipList({required this.onChipSelected});
+
   @override
   _CustomChipListState createState() => _CustomChipListState();
 }
 
 class _CustomChipListState extends State<CustomChipList> {
   List<Map<String, String>> categories = [
-    {"name": "Buy skins", "image": AppImages.appBuySkin,},
-    {"name": "Buy coins", "image": AppImages.appWallet,"image2": AppImages.appWallet2},
-    {"name": "Sell coins", "image": AppImages.appSellCoin,"image2": AppImages.appSellCoin2},
+    {"name": "Buy skins", "image": AppImages.appBuySkin},
+    {
+      "name": "Buy coins",
+      "image": AppImages.appWallet,
+      "image2": AppImages.appWallet2
+    },
+    {
+      "name": "Sell coins",
+      "image": AppImages.appSellCoin,
+      "image2": AppImages.appSellCoin2
+    },
   ];
 
   int selectedIndex = -1; // No chip selected initially
@@ -35,12 +46,14 @@ class _CustomChipListState extends State<CustomChipList> {
               setState(() {
                 selectedIndex = selected ? index : -1;
               });
+              widget.onChipSelected(selectedIndex); // Call the callback
             },
             label: Container(
-              width: 100, // Adjust width
+              width: 100,
               decoration: BoxDecoration(
-                color: selectedIndex == index ? AppColors.initColors().disableButtonColor :
-                AppColors.initColors().mainGradient1,
+                color: selectedIndex == index
+                    ? AppColors.initColors().disableButtonColor
+                    : AppColors.initColors().mainGradient1,
                 border: Border.all(color: AppColors.initColors().white),
                 borderRadius: BorderRadius.circular(12.r),
               ),
@@ -52,10 +65,11 @@ class _CustomChipListState extends State<CustomChipList> {
                     children: [
                       Image.asset(
                         categories[index]["image"]!,
-                        width: 40, // Adjust icon size
+                        width: 40,
                         height: 40,
                       ),
-                      categories[index]["image2"] != null && categories[index]["image2"]!.isNotEmpty
+                      categories[index]["image2"] != null &&
+                          categories[index]["image2"]!.isNotEmpty
                           ? Image.asset(
                         categories[index]["image2"]!,
                         width: 40,
@@ -89,7 +103,9 @@ class _CustomChipListState extends State<CustomChipList> {
             ),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(12.r),
-              side: BorderSide(color: selectedIndex == index ? Colors.blue : Colors.grey),
+              side: BorderSide(
+                  color:
+                  selectedIndex == index ? Colors.blue : Colors.grey),
             ),
             backgroundColor: Colors.white,
             selectedColor: Colors.blue.shade100,

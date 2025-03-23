@@ -27,6 +27,7 @@ import '../../../../core/service/dependency_injection.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_images.dart';
 import '../../../../utils/enums.dart';
+import '../../../data/models/responses/trader_all_response.dart';
 import '../../../domain/entities/common/drop_down_item.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
@@ -38,6 +39,10 @@ import '../../common/appbar.dart';
 import '../base_view.dart';
 
 class PaymentMethodView extends BaseView {
+  final TraderAllData tradeData;
+
+
+  PaymentMethodView({required this.tradeData});
 
   @override
   State<PaymentMethodView> createState() => _ShopViewState();
@@ -47,6 +52,8 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
   var bloc = injection<AuthBloc>();
   int activeStep = 0;
   String selectedPayment = "Bank transfer";
+  final amount = TextEditingController();
+  File? _uploadedFile;
 
   final List<String> paymentMethods = [
     "Bank transfer",
@@ -72,9 +79,9 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
   final TextEditingController cardHolderNameController = TextEditingController();
   int remainingSeconds = 15 * 60;
   late Timer timer;
-  final int paymentMethod = 2;
+  final int paymentMethod = 3;
 
-  File? _uploadedFiles;
+
 
 
   @override
@@ -190,10 +197,7 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
                       });
                     },
                   ),
-
                   Expanded(child: getStepContent(activeStep),),
-
-
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 24.0,vertical: 24),
                     child:activeStep<2 ? AppButton(buttonText: 'Continue', onTapButton:  (){
@@ -245,8 +249,8 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
           children: [
             PaymentComponent(
               profileImage: AppImages.appMan,
-              name: "KoTi Ishan",
-              isVerified: true,
+              name: widget.tradeData.fullName,
+              isVerified: widget.tradeData.isVerified,
               likePercentage: 100.0,
               followers: 340,
               minLimit: 1000,
@@ -254,12 +258,12 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
               pricePerCoin: 0.95,),
 
           if (paymentMethod == 1) ...[
-            AppTextField(label: 'Price',hint: 'lkr: Enter amount',),
+            AppTextField(label: 'Price',hint: 'lkr: Enter amount',controller: amount,),
             SizedBox(height: 5.h,),
             Row(
               children: [
                 Text(
-                  "Limit: 100 - 1000",
+                  "Limit:  ${widget.tradeData.minCoinLimit} - ${widget.tradeData.maxCoinLimit}",
                   style: TextStyle(
                       color: AppColors.initColors().thumbColor,
                       fontSize: AppDimensions.kFontSize14,
@@ -268,7 +272,7 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
                 ),
                 Spacer(),
                 Text(
-                  "100 Coins",
+                  "${widget.tradeData.availableCoins} Coins",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: AppDimensions.kFontSize16,
@@ -330,7 +334,7 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
             Row(
               children: [
                 Text(
-                  "Limit: 100 - 1000",
+                  "Limit: ${widget.tradeData.minCoinLimit} - ${widget.tradeData.maxCoinLimit}",
                   style: TextStyle(
                       color: AppColors.initColors().thumbColor,
                       fontSize: AppDimensions.kFontSize14,
@@ -339,7 +343,7 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
                 ),
                 Spacer(),
                 Text(
-                  "100 Coins",
+                  "${widget.tradeData.availableCoins} Coins",
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: AppDimensions.kFontSize16,
@@ -388,8 +392,8 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
           children: [
             PaymentComponent(
               profileImage: AppImages.appMan,
-              name: "KoTi Ishan",
-              isVerified: true,
+              name: widget.tradeData.fullName,
+              isVerified: widget.tradeData.isVerified,
               likePercentage: 100.0,
               followers: 340,
               minLimit: 1000,
@@ -429,10 +433,10 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
                 ),
               ),
               SizedBox(height: 12.h),
-              BankDetailsCompo(title: 'Card holder name', name: 'P. Kodeeshan'),
-              BankDetailsCompo(title: 'Bank name', name: 'Bank of Ceylon'),
-              BankDetailsCompo(title: 'Account number', name: '248845125475'),
-              BankDetailsCompo(title: 'Branch', name: 'Hali Ala'),
+              BankDetailsCompo(title: 'Card holder name', name: widget.tradeData.account.holderName),
+              BankDetailsCompo(title: 'Bank name', name: widget.tradeData.account.bank),
+              BankDetailsCompo(title: 'Account number', name: widget.tradeData.account.accountNumber),
+              BankDetailsCompo(title: 'Branch', name: widget.tradeData.account.branch),
               SizedBox(height: 36.h),
               Row(
                 children: [
@@ -453,7 +457,7 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
                 onTap: () {
                   _showUploadOptions(context);
                 },
-                child: UploadButtonComponent(),
+                child: UploadButtonComponent(image: _uploadedFile,),
               ),
             ] else if (paymentMethod == 3) ...[
               SizedBox(height: 12.h),
@@ -538,7 +542,6 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
     );
   }
 
-
   Widget step3(){
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 24.0),
@@ -546,8 +549,8 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
         children: [
           PaymentComponent(
             profileImage: AppImages.appMan,
-            name: "KoTi Ishan",
-            isVerified: true,
+            name: widget.tradeData.fullName,
+            isVerified: widget.tradeData.isVerified,
             likePercentage: 100.0,
             followers: 340,
             minLimit: 1000,
@@ -559,9 +562,9 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
              fontSize: AppDimensions.kFontSize18,
              fontWeight: FontWeight.w600),),
          SizedBox(height: 12.h,),
-          TradeDetailsComponent(name: 'Trade no', count: 123456789,currencyType: ''),
+          TradeDetailsComponent(name: 'Trade no', count:  int.tryParse(widget.tradeData.traderNumber) ?? 0,currencyType: ''),
           TradeDetailsComponent(name: 'Coins you sell', count: 5000,currencyType: 'Coins',),
-          TradeDetailsComponent(name: 'Amount you get', count: 4800,currencyType: 'Coins'),
+          TradeDetailsComponent(name: 'Amount you get', count: widget.tradeData.availableCoins,currencyType: 'Coins'),
 
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -622,10 +625,6 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
     );
   }
 
-
-
-
-
   Future getImageFromGallery() async {
     AppPermissionManager.requestGalleryPermission(context, () async {
       final picker = ImagePicker();
@@ -667,7 +666,7 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
       showSnackBar('Maximum upload size is 10MB.', AlertType.FAIL);
     } else {
       setState(() {
-       // _uploadedFiles.add(imageFile); // Add file to the list
+        _uploadedFile = imageFile;
       });
     }
   }
@@ -713,7 +712,7 @@ class _ShopViewState extends BaseViewState<PaymentMethodView> {
               Text(
                 'Choose an Upload Method',
                 style: TextStyle(
-                    color: AppColors.initColors().mainBlackColor,
+                    color: AppColors.initColors().darkButtonColor,
                     fontSize: AppDimensions.kFontSize14, fontWeight: FontWeight.w500),
               ),
               SizedBox(height: 60.h),

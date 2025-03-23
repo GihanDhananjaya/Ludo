@@ -16,10 +16,10 @@ class UploadOptionComponent extends StatelessWidget {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20.w,vertical: 14.h),
       decoration: BoxDecoration(
-          color: AppColors.initColors().optionGrayColor,
+          color: AppColors.initColors().mainGradient1,
           borderRadius: BorderRadiusDirectional.circular(16.r),
           border: Border.all(
-              color: AppColors.initColors().borderGrayColor,
+              color: AppColors.initColors().darkButtonColor,
               width: 1
           )
       ),
@@ -28,7 +28,7 @@ class UploadOptionComponent extends StatelessWidget {
           Image.asset(image,height: 54.h,width: 54.w,),
           SizedBox(height: 8.h,),
           Text(title,style: TextStyle(
-              color: AppColors.initColors().borderGrayColor2,
+              color: AppColors.initColors().white,
               fontWeight: FontWeight.w500,
               fontSize: AppDimensions.kFontSize12
           ),)

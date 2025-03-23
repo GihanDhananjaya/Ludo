@@ -6,7 +6,10 @@ import '../../../../core/service/dependency_injection.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_images.dart';
+import '../../../data/models/request/friends_all_request.dart';
+import '../../../data/models/request/user_all_request.dart';
 import '../../bloc/auth/auth_bloc.dart';
+import '../../bloc/auth/auth_event.dart';
 import '../../bloc/auth/auth_state.dart';
 import '../../bloc/base_bloc.dart';
 import '../../bloc/base_event.dart';
@@ -30,11 +33,11 @@ class _FriendsViewState extends BaseViewState<FriendsView> {
   var bloc = injection<AuthBloc>();
 
   final List<PlayerCard>  playerCard=[
-    PlayerCard(playerName: 'Mala 56', level: 300, points: 300, onChallenge: () {  }, onChat: () {  },),
-    PlayerCard(playerName: 'Nikila Sharu...', level: 3333, points: 300, onChallenge: () {  }, onChat: () {  },),
-    PlayerCard(playerName: 'KoTi Ishan', level: 3333, points: 300, onChallenge: () {  }, onChat: () {  },),
-    PlayerCard(playerName: 'Dinuka malla', level: 555, points: 300, onChallenge: () {  }, onChat: () {  },),
-    PlayerCard(playerName: 'Lahiruu', level: 333, points: 300, onChallenge: () {  }, onChat: () {  },),
+    // PlayerCard(playerName: 'Mala 56', level: 300, points: 300, onChallenge: () {  }, onChat: () {  },),
+    // PlayerCard(playerName: 'Nikila Sharu...', level: 3333, points: 300, onChallenge: () {  }, onChat: () {  },),
+    // PlayerCard(playerName: 'KoTi Ishan', level: 3333, points: 300, onChallenge: () {  }, onChat: () {  },),
+    // PlayerCard(playerName: 'Dinuka malla', level: 555, points: 300, onChallenge: () {  }, onChat: () {  },),
+    // PlayerCard(playerName: 'Lahiruu', level: 333, points: 300, onChallenge: () {  }, onChat: () {  },),
   ];
 
   List<PlayerCard> filteredPeople = [];
@@ -43,8 +46,7 @@ class _FriendsViewState extends BaseViewState<FriendsView> {
   @override
   void initState() {
     setState(() {
-      filteredPeople.clear();
-      filteredPeople.addAll(playerCard);
+      bloc.add(FriendsAllDataEvent(friendsAllRequest: FriendsAllRequest(userId: 1,)));
     });
     super.initState();
   }
@@ -55,7 +57,39 @@ class _FriendsViewState extends BaseViewState<FriendsView> {
       body: BlocProvider<AuthBloc>(
         create: (_) => bloc,
         child: BlocListener<AuthBloc, BaseState<AuthState>>(
-          listener: (_, state) {},
+          listener: (_, state) {
+            if(state is FriendsAllSuccessState){
+              setState(() {
+                playerCard.clear();
+                playerCard.addAll(state.friendsAllData.map((e) => PlayerCard(
+                  level: e.rank,
+                  playerName: e.fullName,
+                  onChat: (){},
+                  onChallenge: (){},
+                  points: e.coins,
+                ),).toList());
+
+                filteredPeople.clear();
+                filteredPeople.addAll(playerCard);
+              });
+            }else if(state is UserAllSuccessState){
+              setState(() {
+                playerCard.clear();
+                playerCard.addAll(
+                  state.userAllDataList
+                      .map(
+                        (e) => PlayerCard(
+                      level: e.rank,
+                      playerName: e.fullName,
+                      onChat: () {},
+                      onChallenge: () {},
+                      points: e.coins,
+                    ),
+                  ).toList(),
+                );
+              });
+            }
+          },
           child: Stack(
             fit: StackFit.expand,
             children: [
@@ -92,7 +126,10 @@ class _FriendsViewState extends BaseViewState<FriendsView> {
                             child: AppSearchComponent(
                               searchCriteria: AppSearchCriteria(
                                   defaultValue: '',
-                                  onSubmit: (String ) {},
+                                  onSubmit: (String searchQuery) {
+                                    // bloc.add(UserAllDataEvent(userAllRequest: UserAllRequest(
+                                    //     searchQuery: searchQuery)));
+                                  },
                                   dataset: playerCard.map((e)=>e.playerName).toList(),
                                   onQueryChanged: (p0) {
                                     setState(() {
@@ -105,8 +142,7 @@ class _FriendsViewState extends BaseViewState<FriendsView> {
                                             .toList(),
                                       );
                                     });
-
-                                },
+                                    },
                               ),
                             ),
                           ),

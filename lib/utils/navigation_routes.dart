@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import '../features/data/models/responses/trader_all_response.dart';
 import '../features/domain/entities/transection_entity.dart';
 import '../features/presentation/views/dashboard/bottom_bar_view.dart';
 import '../features/presentation/views/dashboard/image_bottom_bar.dart';
@@ -51,7 +52,7 @@ class Routes {
             child: SignInView(), type: PageTransitionType.fade);
       case Routes.kPaymentMethodView:
         return PageTransition(
-            child: PaymentMethodView(), type: PageTransitionType.fade);
+            child: PaymentMethodView(tradeData: settings.arguments as TraderAllData,), type: PageTransitionType.fade);
       case Routes.kDiceView:
         return PageTransition(
             child: DiceView(), type: PageTransitionType.fade);

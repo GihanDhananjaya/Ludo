@@ -16,8 +16,15 @@ import '../../../error/messages.dart';
 import '../../domain/repositories/repository.dart';
 import '../datasources/remote_data_source.dart';
 import '../models/common/common_error_response.dart';
+import '../models/common/common_response.dart';
+import '../models/request/coin_buy_request.dart';
+import '../models/request/friends_all_request.dart';
+import '../models/request/user_all_request.dart';
+import '../models/responses/friends_all_response.dart';
 import '../models/responses/master_data_response.dart';
 import '../models/responses/top_rank_response.dart';
+import '../models/responses/trader_all_response.dart';
+import '../models/responses/user_all_response.dart';
 
 class RepositoryImpl implements Repository {
   final RemoteDataSource remoteDataSource;
@@ -181,6 +188,103 @@ class RepositoryImpl implements Repository {
   Future<Either<Failure, MasterDataResponse>> masterDataGetAPI() async {
     try {
       final response = await remoteDataSource.masterDataGetAPI();
+      return Right(response);
+    } on ServerException catch (ex) {
+      return Left(ServerFailure(ex.errorResponseModel));
+    } on UnAuthorizedException catch (ex) {
+      return Left(AuthorizedFailure(ex.errorResponseModel));
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.errorResponseModel));
+    } on Exception {
+      return Left(
+        ServerFailure(
+          ErrorResponseModel(
+              responseError: ErrorMessages.ERROR_SOMETHING_WENT_WRONG,
+              responseCode: ''),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, FriendsAllResponse>> friendsAllDataAPI(FriendsAllRequest friendsAllRequest) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await remoteDataSource.friendsAllDataAPI(friendsAllRequest);
+        return Right(response);
+      } on ServerException catch (ex) {
+        return Left(ServerFailure(ex.errorResponseModel));
+      } on UnAuthorizedException catch (ex) {
+        return Left(AuthorizedFailure(ex.errorResponseModel));
+      } on DioException catch (e) {
+        return Left(ServerFailure(e.errorResponseModel));
+      } on Exception {
+        return Left(
+          ServerFailure(
+            ErrorResponseModel(
+                responseError: ErrorMessages.ERROR_SOMETHING_WENT_WRONG,
+                responseCode: ''),
+          ),
+        );
+      }
+    } else {
+      return Left(ConnectionFailure());
+    }
+  }
+
+  @override
+  Future<Either<Failure, UserAllResponse>> userAllDataAPI(UserAllRequest userAllRequest) async {
+    if (await networkInfo.isConnected) {
+      try {
+        final response = await remoteDataSource.userAllDataAPI(userAllRequest);
+        return Right(response);
+      } on ServerException catch (ex) {
+        return Left(ServerFailure(ex.errorResponseModel));
+      } on UnAuthorizedException catch (ex) {
+        return Left(AuthorizedFailure(ex.errorResponseModel));
+      } on DioException catch (e) {
+        return Left(ServerFailure(e.errorResponseModel));
+      } on Exception {
+        return Left(
+          ServerFailure(
+            ErrorResponseModel(
+                responseError: ErrorMessages.ERROR_SOMETHING_WENT_WRONG,
+                responseCode: ''),
+          ),
+        );
+      }
+    } else {
+      return Left(ConnectionFailure());
+    }
+  }
+
+
+  @override
+  Future<Either<Failure, TraderAllResponse>> traderAllGetAPI() async {
+    try {
+      final response = await remoteDataSource.traderAllAPI();
+      return Right(response);
+    } on ServerException catch (ex) {
+      return Left(ServerFailure(ex.errorResponseModel));
+    } on UnAuthorizedException catch (ex) {
+      return Left(AuthorizedFailure(ex.errorResponseModel));
+    } on DioException catch (e) {
+      return Left(ServerFailure(e.errorResponseModel));
+    } on Exception {
+      return Left(
+        ServerFailure(
+          ErrorResponseModel(
+              responseError: ErrorMessages.ERROR_SOMETHING_WENT_WRONG,
+              responseCode: ''),
+        ),
+      );
+    }
+  }
+
+  @override
+  Future<Either<Failure, CommonResponse>> coinBuyDataAPI(CoinBuyRequest coinBuyRequest) async {
+    try {
+      final response = await remoteDataSource.coinBuyAPI(coinBuyRequest);
       return Right(response);
     } on ServerException catch (ex) {
       return Left(ServerFailure(ex.errorResponseModel));

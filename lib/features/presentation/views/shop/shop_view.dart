@@ -10,7 +10,10 @@ import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_images.dart';
 import '../../../../utils/navigation_routes.dart';
+import '../../../data/models/request/coin_buy_request.dart';
+import '../../../data/models/responses/trader_all_response.dart';
 import '../../bloc/auth/auth_bloc.dart';
+import '../../bloc/auth/auth_event.dart';
 import '../../bloc/auth/auth_state.dart';
 import '../../bloc/base_bloc.dart';
 import '../../bloc/base_event.dart';
@@ -32,6 +35,14 @@ class ShopView extends BaseView {
 
 class _ShopViewState extends BaseViewState<ShopView> {
   var bloc = injection<AuthBloc>();
+  List<TraderAllData> tradesList = [];
+  int clipValue = 0;
+
+  @override
+  void initState() {
+    bloc.add(TraderAllEvent(shouldShowProgress: true));
+    super.initState();
+  }
 
   @override
   Widget buildView(BuildContext context) {
@@ -40,7 +51,11 @@ class _ShopViewState extends BaseViewState<ShopView> {
         create: (_) => bloc,
         child: BlocListener<AuthBloc, BaseState<AuthState>>(
           listener: (_, state) {
-
+            if(state is TraderAllSuccessState){
+               setState(() {
+                 tradesList = state.traderAllData;
+               });
+            }
           },
           child: Stack(
             fit: StackFit.expand,
@@ -56,14 +71,22 @@ class _ShopViewState extends BaseViewState<ShopView> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       SizedBox(height: 10.h,),
-                  TopComponent(
+                      TopComponent(
                     coins: 12232,
                     gems: 1223,
                     onCoinsTap: () {},
                       onGemsTap: () {}, setting: () {  }, notification: () {  },),
 
                       SizedBox(height: 35.h,),
-                      CustomChipList(),
+                      CustomChipList(onChipSelected: (int a) {
+                         if(a == 1){
+                           clipValue  = a;
+                         }if(a == 2){
+                           clipValue  = a;
+                         }if(a == 3){
+                           clipValue  = a;
+                         }
+                      },),
                       SizedBox(height: 27.h,),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 13,vertical: 12),
@@ -114,21 +137,21 @@ class _ShopViewState extends BaseViewState<ShopView> {
                           padding: EdgeInsets.only(top: 0),
                           physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          itemCount: 3,
+                          itemCount: tradesList.length,
                           itemBuilder: (context, index) {
                            return  GestureDetector(
                              onTap: (){
-                               Navigator.pushNamed(context, Routes.kPaymentMethodView);
+                               Navigator.pushNamed(context, Routes.kPaymentMethodView,arguments: tradesList[index]);
                              },
                              child: TradesComponent(
                                profileImage: AppImages.appMan,
-                               name: "KoTi Ishan",
-                               isVerified: true,
+                               name: tradesList[index].fullName,
+                               isVerified: tradesList[index].isVerified,
                                likePercentage: 100.0,
                                followers: 340,
-                               minLimit: 1000,
-                               maxLimit: 20000,
-                               pricePerCoin: 0.95,),
+                               minLimit: tradesList[index].minCoinLimit,
+                               maxLimit: tradesList[index].maxCoinLimit,
+                               pricePerCoin: tradesList[index].coinValue,),
                            );
                           },
                       ),

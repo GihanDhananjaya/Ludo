@@ -1,7 +1,10 @@
 import '../../../data/models/responses/auth_user_response.dart';
+import '../../../data/models/responses/friends_all_response.dart';
 import '../../../data/models/responses/master_data_response.dart';
 import '../../../data/models/responses/otp_generate_response.dart';
 import '../../../data/models/responses/top_rank_response.dart';
+import '../../../data/models/responses/trader_all_response.dart';
+import '../../../data/models/responses/user_all_response.dart';
 import '../../../data/models/responses/user_register_response.dart';
 import '../../../data/models/responses/user_verification_response.dart';
 import '../base_state.dart';
@@ -82,5 +85,39 @@ class MasterDataGetSuccessState extends AuthState {
   MasterDataGetSuccessState({
     required this.message,
     required this.output,
+  });
+}
+
+class FriendsAllSuccessState extends AuthState {
+  final String message;
+  final List<FriendsAllData> friendsAllData;
+  FriendsAllSuccessState({
+    required this.message,
+    required this.friendsAllData,
+  });
+}
+
+class UserAllSuccessState extends AuthState {
+  final String message;
+  final List<UserAllData> userAllDataList;
+  UserAllSuccessState({
+    required this.message,
+    required this.userAllDataList,
+  });
+}
+
+class TraderAllSuccessState extends AuthState {
+  final String message;
+  final List<TraderAllData> traderAllData;
+  TraderAllSuccessState({
+    required this.message,
+    required this.traderAllData,
+  });
+}
+
+class CoinBuySuccessState extends AuthState {
+  final String message;
+  CoinBuySuccessState({
+    required this.message,
   });
 }

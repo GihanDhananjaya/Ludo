@@ -6,7 +6,7 @@ import 'package:ludoapp/utils/app_dimensions.dart';
 class TradesComponent extends StatelessWidget {
   final String profileImage;
   final String name;
-  final bool isVerified;
+  final int isVerified;
   final double likePercentage;
   final int followers;
   final int minLimit;
@@ -104,7 +104,7 @@ class TradesComponent extends StatelessWidget {
                       ),
                       Row(
                         children: [
-                          if (isVerified)
+                          if (isVerified ==1)
                             Row(
                               children: [
                                 const Icon(

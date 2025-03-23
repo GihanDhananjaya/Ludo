@@ -1,5 +1,8 @@
+import '../../../data/models/request/coin_buy_request.dart';
+import '../../../data/models/request/friends_all_request.dart';
 import '../../../data/models/request/otp_generate_request.dart';
 import '../../../data/models/request/otp_submit_request.dart';
+import '../../../data/models/request/user_all_request.dart';
 import '../../../data/models/request/user_register_request.dart';
 import '../../../data/models/request/user_verification_request.dart';
 import '../base_event.dart';
@@ -58,5 +61,31 @@ class MasterDataGetEvent extends AuthEvent {
   final bool shouldShowProgress;
   MasterDataGetEvent({
     required this.shouldShowProgress,
+  });
+}
+
+class FriendsAllDataEvent extends AuthEvent {
+  final FriendsAllRequest friendsAllRequest;
+
+  FriendsAllDataEvent({required this.friendsAllRequest});
+}
+
+class UserAllDataEvent extends AuthEvent {
+  final UserAllRequest userAllRequest;
+
+  UserAllDataEvent({required this.userAllRequest});
+}
+
+class TraderAllEvent extends AuthEvent {
+  final bool shouldShowProgress;
+  TraderAllEvent({
+    required this.shouldShowProgress,
+  });
+}
+
+class CoinBuyEvent extends AuthEvent {
+  final CoinBuyRequest coinBuyRequest;
+  CoinBuyEvent({
+    required this.coinBuyRequest,
   });
 }

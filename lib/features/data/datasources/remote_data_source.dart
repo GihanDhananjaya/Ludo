@@ -3,15 +3,22 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import '../../../core/network/api_helper.dart';
 import '../../../core/network/mock_api_helper.dart';
+import '../models/common/common_response.dart';
+import '../models/request/coin_buy_request.dart';
+import '../models/request/friends_all_request.dart';
 import '../models/request/otp_generate_request.dart';
 import '../models/request/otp_submit_request.dart';
+import '../models/request/user_all_request.dart';
 import '../models/request/user_register_request.dart';
 import '../models/request/user_verification_request.dart';
 import '../models/responses/auth_user_response.dart';
+import '../models/responses/friends_all_response.dart';
 import '../models/responses/master_data_response.dart';
 import '../models/responses/otp_generate_response.dart';
 import '../models/responses/otp_submit_response.dart';
 import '../models/responses/top_rank_response.dart';
+import '../models/responses/trader_all_response.dart';
+import '../models/responses/user_all_response.dart';
 import '../models/responses/user_register_response.dart';
 import '../models/responses/user_verification_fail_response.dart';
 import '../models/responses/user_verification_response.dart';
@@ -29,6 +36,13 @@ abstract class RemoteDataSource {
       OtpSubmitRequest otpSubmitRequest);
   Future<TopRankResponse> topRankGetAPI();
   Future<MasterDataResponse> masterDataGetAPI();
+  Future<FriendsAllResponse> friendsAllDataAPI(
+      FriendsAllRequest friendsAllRequest);
+  Future<UserAllResponse> userAllDataAPI(
+      UserAllRequest userAllRequest);
+  Future<TraderAllResponse> traderAllAPI();
+  Future<CommonResponse> coinBuyAPI(
+      CoinBuyRequest coinBuyRequest);
 }
 
 class RemoteDataSourceImpl implements RemoteDataSource {
@@ -116,6 +130,55 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     try {
       final response = await mockAPIHelper.post("master/get", body: null);
       return MasterDataResponse.fromJson(response.data);
+    } on Exception {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<FriendsAllResponse> friendsAllDataAPI(FriendsAllRequest friendsAllRequest) async {
+    try {
+      final response = await mockAPIHelper.post(
+        "user/friend/all",
+        body: friendsAllRequest.toJson(),
+      );
+      return FriendsAllResponse.fromJson(response.data);
+    } on Exception {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<UserAllResponse> userAllDataAPI(UserAllRequest userAllRequest) async {
+    try {
+      final response = await mockAPIHelper.post(
+        "user/all",
+        body: userAllRequest.toJson(),
+      );
+      return UserAllResponse.fromJson(response.data);
+    } on Exception {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<TraderAllResponse> traderAllAPI() async {
+    try {
+      final response = await mockAPIHelper.post("trader/all", body: null);
+      return TraderAllResponse.fromJson(response.data);
+    } on Exception {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<CommonResponse> coinBuyAPI(CoinBuyRequest coinBuyRequest) async {
+    try {
+      final response = await mockAPIHelper.post(
+        "coin/buy",
+        body: coinBuyRequest.toJson(),
+      );
+      return CommonResponse.fromJson(response.data);
     } on Exception {
       rethrow;
     }

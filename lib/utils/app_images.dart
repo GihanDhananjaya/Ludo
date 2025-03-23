@@ -55,6 +55,7 @@ class AppImages {
   static const String appTextImg = 'images/png/app_text_img.png';
   static const String appGiftImg = 'images/png/app_gift_img.png';
   static const String appTaskImg = 'images/png/app_task_img.png';
+  static const String appTitan = 'images/png/app_titan.png';
 
   static const String appFavorite = 'images/png/app_favorite.png';
   static const String appProfile = 'images/png/app_profile.png';

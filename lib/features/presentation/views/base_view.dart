@@ -329,13 +329,14 @@ abstract class BaseViewState<Page extends BaseView> extends State<Page> {
                   // ), // Custom text or buttons on image
                 ),
                 Positioned(
-                  bottom: 1, // Adjust as needed
+                  bottom: 1,
+                 right: 82,
                   child: InkResponse(
                     onTap: (){
                       Navigator.pop(context);
                     },
                     child: SizedBox(
-                      width: 100,
+                      width: 150,
                       height: 40,
                       child: Text(btnType,style: TextStyle(
                           color: AppColors.initColors().white,
@@ -443,8 +444,8 @@ abstract class BaseViewState<Page extends BaseView> extends State<Page> {
                   ),
                 ),
                 Positioned(
-                  bottom: 4,
-                  left: 135,
+                  bottom: 8,
+                  left: 145,
                   child: InkResponse(
                     onTap: (){
                       Navigator.pushNamed(context, Routes.kSignInView);

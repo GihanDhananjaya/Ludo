@@ -1,23 +1,11 @@
-import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ludoapp/features/presentation/common/app_button.dart';
-import 'package:ludoapp/features/presentation/views/home/widget/coins_gem_count_component.dart';
-import 'package:ludoapp/features/presentation/views/home/widget/mic_toggle.dart';
-import 'package:ludoapp/features/presentation/views/home/widget/notification_component.dart';
-import 'package:ludoapp/features/presentation/views/home/widget/profile_badge_component.dart';
-import 'package:ludoapp/features/presentation/views/home/widget/task_gift_compo.dart';
-import 'package:ludoapp/features/presentation/views/home/widget/top_rank_component.dart';
-import 'package:ludoapp/features/presentation/views/home/widget/volume.dart';
-import 'package:volume_controller/volume_controller.dart';
+import 'package:ludoapp/features/presentation/views/select_room/widget/select_room_component.dart';
 import '../../../../core/service/dependency_injection.dart';
-import '../../../../error/messages.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_dimensions.dart';
 import '../../../../utils/app_images.dart';
-import '../../../../utils/navigation_routes.dart';
 import '../../bloc/auth/auth_bloc.dart';
 import '../../bloc/auth/auth_state.dart';
 import '../../bloc/base_bloc.dart';
@@ -142,7 +130,8 @@ class _SelectRoomViewState extends BaseViewState<SelectRoomView> {
                                     shrinkWrap: true,
                                     itemCount: image.length,
                                     itemBuilder: (context, index) {
-                                      return Image.asset(image[index]);
+                                      //return Image.asset(image[index]);
+                                      return SelectRoomComponent();
                                     },)
 
                               ],

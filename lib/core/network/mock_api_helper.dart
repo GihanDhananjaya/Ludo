@@ -51,6 +51,14 @@ class MockAPIHelper {
       return MockModels.topRankResponse;
     }else if (url == 'master/get') {
       return MockModels.masterDataResponse;
+    }else if (url == 'user/friend/all') {
+      return MockModels.friendsAllResponse;
+    }else if (url == 'user/all') {
+      return MockModels.userAllResponse;
+    }else if (url == 'trader/all') {
+      return MockModels.traderAllResponse;
+    }else if (url == 'coin/buy') {
+      return MockModels.commonResponse;
     }
   }
 }
